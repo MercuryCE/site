@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Mercury Packages Search</title>
+    {(components/header.html)}
+    <script src="js/search.js"></script>
+  </head>
+  <body>
+    <div id="page-wrapper">
+      {(components/navbar.html)}
+      <div class="uk-container uk-padding">
+        <div class="uk-flex uk-flex-center">
+          <div>
+            <form class="uk-search uk-search-default uk-search-navbar">
+              <a uk-search-icon></a>
+              <input
+                id="searchBar"
+                style="font-size: 95%"
+                class="uk-search-input"
+                type="search"
+                placeholder="Search by package label or category..."
+                autocomplete="false"
+                autofocus="true"
+                onkeyup="search()"
+              />
+            </form>
+          </div>
+        </div>
+        <div class="uk-margin-small"></div>
+        <b class="uk-text-large"
+          ><span class="uk-badge">{{#packages}}</span> Packages</b
+        >
+        <div class="uk-margin-small"></div>
+        Here is a list of packages hosted in the mercury repository, currently
+        you can just search for the latest version available on the repository,
+        even though if you know the exact version number of an old package you
+        can still download it from Mercury.
+        <div class="uk-margin-small"></div>
+        <hr />
+        <ul id="packagesList" uk-accordion>
+          {% for _, package in pairs(packages) do %} {(components/package.html,
+          {package = package})} {% end %}
+        </ul>
+      </div>
+    </div>
+  </body>
+  {(components/footer.html)}
+</html>

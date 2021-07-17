@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Mercury Packages Index</title>
+    {(components/header.html)} 
+  </head>
+  <body>
+    <div id="page-wrapper">
+      {(components/navbar.html)}
+      <div class="uk-tile uk-tile uk-text-center">
+        <p class="uk-text-lead">
+          <img
+            data-src="img/mercury.png"
+            width="60px"
+            height="20px"
+            alt=""
+            uk-img
+          />
+          Mercury is a simple but powerful package manager for
+          <b>Halo Custom Edition</b>.
+        </p>
+        <p>
+          It allows you to download and install any mod, map or addon from a
+          command line terminal.
+        </p>
+        <div class="uk-margin-medium"></div>
+        <div
+          style="
+            text-align: left;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          "
+        >
+          <div id="termynal" data-termynal>
+            <span data-ty="input" data-ty-prompt="C:\Users\117>"
+              >mercury install chimera</span
+            >
+            <span data-ty>Searching for "chimera" in repository... done.</span>
+            <span data-ty
+              >1.19MB received, 2.47MB/s throughput, 0s elapsed</span
+            >
+            <span data-ty>Inserting chimera files...</span>
+            <span data-ty
+              >Warning, creating backup for conflict file: "strings.dll"...
+              done.</span
+            >
+            <span data-ty>Success, package "chimera" has been installed.</span>
+          </div>
+        </div>
+
+        <div class="uk-margin-medium"></div>
+        <a
+          href="https://github.com/Sledmine/Mercury/releases"
+          class="uk-button uk-button-primary"
+        >
+          <span uk-icon="download"></span>
+          Downloads
+        </a>
+        <a href="/packages" class="uk-button uk-button-secondary">
+          <span uk-icon="search"></span>
+          Search packages
+        </a>
+        <a
+          href="https://discord.shadowmods.net"
+          class="uk-button uk-button-secondary"
+        >
+          <span uk-icon="discord"></span>
+          Join us on Discord
+        </a>
+        <p>
+          <b>NOTE:</b> By now Mercury only works for Halo Custom Edition on
+          Windows (Linux build on the works).
+        </p>
+      </div>
+
+      <script src="js/termynal.js" data-termynal-container="#termynal"></script>
+    </div>
+  </body>
+  {(components/footer.html)}
+</html>
