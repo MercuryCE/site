@@ -1,0 +1,21 @@
+<div id="offcanvas-usage" uk-offcanvas="overlay: true">
+  <div class="uk-offcanvas-bar">
+    <button class="uk-offcanvas-close" type="button" uk-close></button>
+    <h3>Navigation</h3>
+    <ul class="uk-nav uk-nav-default">
+      {% for _,route in pairs(routes or {}) do %} {% if (route.header) then %}
+      <li class="uk-nav-header">Docs</li>
+      {% else %}
+      <li>
+        <a href="{{ route.path }}">
+          <span
+            class="uk-margin-small-right"
+            uk-icon="icon: {{route.icon}}"
+          ></span>
+          {{ route.label }}
+        </a>
+      </li>
+      {% end %} {% end %}
+    </ul>
+  </div>
+</div>

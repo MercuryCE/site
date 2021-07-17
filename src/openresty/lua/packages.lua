@@ -6,6 +6,10 @@ local jsonContent = jsonFile:read("*all")
 
 local packagesList = json.decode(jsonContent)
 
+local routesFile = io.open(ngx.config.prefix() .. "routes.json", "r")
+local routesContent = routesFile:read("*all")
+local routesTable = json.decode(routesContent)
+
 template.render("pages/packages.html", {
-    packages = packagesList
+    packages = packagesList, routes = routesTable
 })
