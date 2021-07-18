@@ -22,7 +22,7 @@ on our <code>Halo Custom Edition\maps\</code> folder to play it as always.</p>
 </ul>
 <p>This is the most important file for a Mercury package, this json file contains all the information about the package, it has in it different properties to tell Mercury where to place all the files from the <code>.merc</code> package, giving an easy way to install any kind of mod, leaving the installation process to a program instead of leaving it to users.</p>
 <p><em><strong>Note:</strong></em> There are some plans to support <code>.yml</code> files in the future as manifest files. </p>
-<h1 id="manifest-structure">Manifest Structure</h1>
+<h1 id="manifest-structure---110">Manifest Structure - 1.1.0</h1>
 <p>As explained above, a manifest file has different properties to tell Mercury how to install our mod, here is an example of a manifest.json below:</p>
 <pre><code class="language-json">{
     &quot;label&quot;: &quot;forgeisland&quot;,
@@ -31,16 +31,17 @@ on our <code>Halo Custom Edition\maps\</code> folder to play it as always.</p>
     &quot;version&quot;: &quot;1.0.0-beta-1&quot;,
     &quot;author&quot;: &quot;Shadowmods Team&quot;,
     &quot;internalVersion&quot;: &quot;1.0.0-beta-1&quot;,
-    &quot;manifestVersion&quot;: &quot;1.0&quot;,
+    &quot;manifestVersion&quot;: &quot;1.1.0&quot;,
+    &quot;category&quot;: &quot;map&quot;,
     &quot;files&quot;: [
         {
             &quot;path&quot;: &quot;maps\\forge_island.map&quot;,
-            &quot;outputPath&quot;: &quot;$haloce\\&quot;,
+            &quot;outputPath&quot;: &quot;$haloce\\maps\\forge_island.map&quot;,
             &quot;type&quot;: &quot;binary&quot;
         },
         {
             &quot;path&quot;: &quot;forge_island.lua&quot;,
-            &quot;outputPath&quot;: &quot;$mygames\\chimera\\lua\\scripts\\map\\&quot;,
+            &quot;outputPath&quot;: &quot;$mygames\\chimera\\lua\\scripts\\map\\forge_island.lua&quot;,
             &quot;type&quot;: &quot;binary&quot;
         }
     ],
@@ -67,6 +68,16 @@ on our <code>Halo Custom Edition\maps\</code> folder to play it as always.</p>
 <p>This value is optional and is not designed to be used directly, you can use it to represent a really specific version of a mod or software in another format that is not <a href="https://www.jvandemo.com/a-simple-guide-to-semantic-versioning/">semantic versioning</a>, it is used for interface purposes.</p>
 <p><code>manifestVersion</code> </p>
 <p>This value represents which version of the current manifest is being used, manifests are supposed to receive simple changes so this number should not change too often.</p>
+<p><code>category</code></p>
+<p>Category represents a simple type of package, it helps to distinguish packages, also helps indexing,
+it can be anything what you want, but for better indexing there are a list of possible values to use:</p>
+<ul>
+<li>map</li>
+<li>addon</li>
+<li>script</li>
+<li>config</li>
+</ul>
+<p>If you consider that there should be more values here feel free to ask or to create a pull request.</p>
 <p><code>files</code></p>
 <p>Here is another important property, this is the list of files inside the package to be installed in the game, every <strong>file</strong> has different important properties to use:</p>
 <pre><code class="language-jsonc">{
@@ -74,8 +85,8 @@ on our <code>Halo Custom Edition\maps\</code> folder to play it as always.</p>
     &quot;path&quot;: &quot;examplemod.dll&quot;,
     // This is important for updates purposes, this tells Mercury how to update this file
     &quot;type&quot;: &quot;binary&quot;,
-    // This is the final path of the file after installation
-    &quot;outputPath&quot;: &quot;$haloce\\&quot;
+    // This is the final output file path after installation
+    &quot;outputPath&quot;: &quot;$haloce\\examplemod.dll&quot;
 }
 </code></pre>
 <p>There are currently 2 different values to use in the &quot;type&quot; property of every file:</p>
@@ -93,42 +104,43 @@ on our <code>Halo Custom Edition\maps\</code> folder to play it as always.</p>
 <li><code>$haloce</code>: This is translated to the current Halo Custom Edition installation path:</li>
 </ul>
 <pre><code class="language-jsonc">{
-    &quot;outputPath&quot;: &quot;$haloce\\controls\\&quot;
-    // The $haloce string part will be replaced at installation time into: &quot;C:\Halo Custom Edition\controls\&quot;
+    &quot;outputPath&quot;: &quot;$haloce\\controls\\examplemod.dll&quot;
+    // The $haloce string part will be replaced at installation time into: &quot;C:\Halo Custom Edition&quot;
     ...
 </code></pre>
 <ul>
 <li><code>$mygames</code>: This is your default Halo CE folder in the My Games folder Windows entry:</li>
 </ul>
 <pre><code class="language-jsonc">{
-    &quot;outputPath&quot;: &quot;$mygames\\chimera&quot;
-    // The $mygames string part will be replaced at installation time into: &quot;C:\Users\MasterChief117\Documents\My Games\Halo CE\chimera&quot;
+    &quot;outputPath&quot;: &quot;$mygames\\chimera\\lua\\scripts\\global\\myscript.lua&quot;
+    // The $mygames string part will be replaced at installation time into: &quot;C:\Users\MasterChief117\Documents\My Games\Halo CE&quot;
+    // Note that even if the string var says &quot;mygames&quot; the final refers to the &quot;Halo CE&quot; folder
     ...
 </code></pre>
 <p><code>dependencies</code></p>
-<p>This is the list of dependencies required by this package, a dependency is another package hosted in the Mercury repository, every <strong>dependency</strong> has some properties to use:</p>
+<p>This is an array of dependencies required by this package, a dependency is another package hosted in the Mercury repository, <strong>every dependency</strong> has some properties to use:</p>
 <pre><code class="language-jsonc">{
     // Label name of the dependency package
     &quot;label&quot;: &quot;chimera&quot;,
     // Version of the dependency package
     &quot;version&quot;: &quot;3.14.16&quot;,
-    // This value can be nil or not present resulting into getting the latest package available
+    // This value can be null or not present resulting into getting the latest package available
 }
 </code></pre>
-<p>Right now mercury does not support operators to decide which version should be preferred over currently installed versions or a range of safe to use versions, a dependency with a higher version number always will be preferred over currenty installed one and the older will be removed.</p>
+<p>Right now mercury does not support operators to decide which version should be preferred over currently installed versions or a range of safe to use versions, a dependency with a higher version number always will be preferred over a currently installed one and the older will be removed.</p>
 <h1 id="faq">FAQ</h1>
 <h2 id="i-created-my-package-already-how-can-i-upload-it-to-the-mercury-repository">I created my package already, how can I upload it to the Mercury repository?</h2>
 <p>We are working on a platform to allow different creators to upload their own packages, being honest there are not too much packages available right now for Halo Custom Edition, instead you can contact us to upload them for you.</p>
 <h2 id="how-i-can-provide-an-update-for-my-mercury-package">How I can provide an update for my Mercury package?</h2>
 <p>You don&#39;t have to create an update for every package you create, if your package has all the properties mentioned here correctly set and all the required files inside your <code>.merc</code> file our repository or platform should be able to create the update automatically between your last package and your new ones, however an update for different builds can&#39;t be created automatically due to <a href="https://www.jvandemo.com/a-simple-guide-to-semantic-versioning/">semantic versioning</a> guidelines, check the <a href="https://semver.org/">detailed semantic version specifications</a> for more information.</p>
 <h2 id="can-i-host-my-own-packages-repository">Can I host my own packages repository?</h2>
-<p>For sure, Mercury is using an internal api called Vulcano to provide access to different packages, select newest package from repository and more, if you want to host your own packages you can contact us and add your repository to Vulcano as an available mirror for package downloading.</p>
+<p>For sure, Mercury is using an internal API called Vulcano to provide access to different packages, select newest package from repository and more, if you want to host your own packages you can contact us and add your repository to Vulcano as an available mirror for package downloading.</p>
 <h2 id="is-there-a-tool-to-create-an-automated-package-build-process">Is there a tool to create an automated package build process?</h2>
 <p>Sadly nope, but we are working on a new action for Mercury, someting like:</p>
 <pre><code>cd MySuperModFolder\
 mercury pack --nextMajor
 </code></pre>
-<p>Something like this should do the trick in the future, however it is not that hard to build your own packages via bash scripting or someting similar.</p>
+<p>Something like this should do the trick in the future, however it is not that hard to build your own packages via bash scripting or something similar.</p>
 <h1 id="join-us-on-discord">Join us on Discord</h1>
 <p>Feel free to join the <a href="https://discord.shadowmods.net">Shadowmods Discord Server</a> if you want to
 have some assistance at using Mercury! </p>

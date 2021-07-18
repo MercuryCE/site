@@ -23,8 +23,9 @@ if (canOpen(markdownPath)) then
     {(components/sidebar.html, {routes = routes})}
     <div id="page-wrapper">
       {(components/navbar.html)}
+      <div class="uk-padding"></div>
       <div class="uk-container">{(%s.html)}</div>
-       <div class="uk-padding"></div>
+      <div class="uk-padding"></div>
     </div>
   </body>
   {(components/footer.html)}
