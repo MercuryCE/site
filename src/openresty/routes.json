@@ -22,5 +22,10 @@
         "path": "/docs/packages",
         "label": "Mercury Packages",
         "icon": "file-text"
+    },
+    {
+        "path": "/docs/lua-bundler",
+        "label": "Mercury Lua Bundler",
+        "icon": "file-text"
     }
 ]

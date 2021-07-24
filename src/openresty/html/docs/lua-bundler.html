@@ -1,0 +1,117 @@
+<h1 id="mercury-lua-bundler">Mercury Lua Bundler</h1>
+<p>Mercury can be used to create a distributable script from a modular lua project that has pure lua
+modules, resulting in a single script with modules built inside, all what is needed is a simple
+bundle.json file on the root of our lua project and that will do the magic.</p>
+<h1 id="code-project-structure">Code Project Structure</h1>
+<p>Let&#39;s see a simple example of how to bundle a modular lua project, here is a short structure of
+our code project:</p>
+<pre><code>modules\
+    - json.lua
+    stuff\
+        - mymodule.lua
+- bundle.json
+- myscript.lua
+</code></pre>
+<p>Let&#39;s take a look to every file:</p>
+<ul>
+<li><code>modules\json.lua</code></li>
+</ul>
+<p>This is a lua module that can be imported in order to add json decoding/encoding support in our lua
+script, it has no other module dependencies and it is made in pure lua, so no weird DLLs or other
+stuff is required, this is what is called a pure lua module.</p>
+<ul>
+<li><code>modules\stuff\mymodule.lua</code></li>
+</ul>
+<p>This is another example of a pure lua module that we can ship with our final script, the difference
+now is that this is a module made by us, we decide where it is placed and how it should work, this
+type of module can be bundled too.</p>
+<ul>
+<li> <code>myscript.lua</code></li>
+</ul>
+<p>This is almost the most important file in the project structure, our main script
+that ignites the script entry point, this file would be bundled too.</p>
+<ul>
+<li><code>bundle.json</code></li>
+</ul>
+<p>Finally this is the file that will tell Mercury how our project would be bundled in single script
+output, all the info required for that is here.</p>
+<h1 id="bundle-file">Bundle File</h1>
+<p>As explained above, the bundle.json file has all the requirements to bundle our project, the content
+of a bundle.json file could be something like this:</p>
+<pre><code class="language-json">{
+    &quot;name&quot;: &quot;My Project&quot;,
+    &quot;target&quot;: &quot;lua53&quot;,
+    &quot;include&quot;: [
+        &quot;modules\\&quot;
+    ],
+    &quot;modules&quot;: [
+        &quot;json&quot;,
+        &quot;stuff\\mymodule&quot;
+    ],
+    &quot;main&quot;:&quot;myscript&quot;,
+    &quot;output&quot;: &quot;dist\\myscriptbundled.lua&quot;
+}
+</code></pre>
+<p>Let&#39;s take a deeper look at the properties in the bundle.json:</p>
+<p><code>name</code></p>
+<p>Name of the project, it does not have a real use right now, it just makes simpler to understand
+which project you are bundling.</p>
+<p><code>target</code></p>
+<p>This is the lua version compiler target, if you would like to compile your final script using the
+<code>luac</code> compiler you have to place the name of the lua executable compiler here, an example could be
+luac53, luajitc, lua5.3c, etc.</p>
+<p><strong>NOTE:</strong> It is not neccessary to set this property but if you definitely want to compile your
+output script then your compiler should be available in the <code>PATH</code> environment variable to make this
+work.</p>
+<p><code>include</code></p>
+<p>This is an array/list of folders where your modules can be found, similar to the includes folder
+in compilers like C or C++.</p>
+<p><code>modules</code></p>
+<p>Similar to the <code>include</code> property this one is an array/list of the modules that will be added into
+your final bundled script.</p>
+<p><code>main</code></p>
+<p>A really important property, this is the main script to run as the main entry of the bundled script
+it should be named just as the name of the script without the .lua extension on it, it can also be
+the relative or the entire path to the main script.</p>
+<p><code>output</code> </p>
+<p>At last but not least is the output file name of your bundled script, here you can define the name
+of the resulting script using an entire or relative path as well, this property must include the
+extension result of the file.</p>
+<h1 id="create-or-bundle-a-project">Create or Bundle a Project</h1>
+<p>After all the explanation from above we now should be able to start creating modular lua projects
+using Mercury, there are a few tools available on the <code>luabundle</code> command from Mercury, here are
+a few examples of how to use them:</p>
+<h2 id="create-a-bundlejson-template-file">Create a bundle.json template file</h2>
+<pre><code>cd MySuperProjectFolder
+mercury luabundle -t
+</code></pre>
+<p>This command will create <code>bundle.json</code> file with common properties by default, this will help you to start the creation of a modular lua project, the <code>-t</code> flag stands for the short version of the <code>--template</code> flag, meaning this command will create an example of a <code>bundle.json</code> file</p>
+<h2 id="bundle-a-project-directly">Bundle a project directly</h2>
+<pre><code>cd MySuperProjectFolder
+mercury luabundle
+</code></pre>
+<p>This should read our <code>bundle.json</code> file and generate a single output script based on the information
+from this file, it will keep all our comments and modules in the exact same source form.</p>
+<h2 id="bundle-a-project-and-compiling-the-resultant-file">Bundle a project and compiling the resultant file</h2>
+<pre><code>cd MySuperProjectFolder
+mercury luabundle -c
+</code></pre>
+<p>The <code>-c</code> flag stands for the short version of the <code>--compile</code> flag, meaning that this bundle would
+be compiled <strong>AFTER</strong> gathering and bundling all the modules required in the <code>bundle.json</code> file.</p>
+<h2 id="bundle-a-project-using-a-different-bundlejson-file">Bundle a project using a different bundle.json file</h2>
+<pre><code>cd MySuperProjectFolder
+mercury luabundle server
+</code></pre>
+<p>This command will look for a file called <code>serverBundle.json</code> and will read the properties from there
+instead of looking at the default <code>bundle.json</code> file, the name parameter can be any kind of name,
+the only requirement is to add the word &quot;<strong>Bundle</strong>&quot; at the end of our target file, some examples are:
+<strong>clientBundle.json</strong>, <strong>old_versionBundle.json</strong>, <strong>oldVersionBundle.json</strong>,
+<strong>weird_snake_case_file_nameBundle.json</strong>.</p>
+<h1 id="faq">FAQ</h1>
+<h2 id="is-mercury-trying-to-be-some-kind-of-package-manager-for-lua-code">Is Mercury trying to be some kind of package manager for lua code?</h2>
+<p>Nope, not at all, but I&#39;m not really sure about that in the future, I mean Mercury is already
+working as a package manager for Halo Custom Edition mods so getting support for specific
+Halo Custom Edition lua modules is not that crazy but is definitely out of the scope right now.</p>
+<h1 id="join-us-on-discord">Join us on Discord</h1>
+<p>Feel free to join the <a href="https://discord.shadowmods.net">Shadowmods Discord Server</a> if you want to
+have some assistance at using Mercury! </p>
