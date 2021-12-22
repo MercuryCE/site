@@ -1,8 +1,13 @@
 local json = require "cjson"
-local template = require "resty.template"
+LatestPackages = {}
 
-local routesFile = io.open(ngx.config.prefix() .. "routes.json", "r")
-local routesContent = routesFile:read("*all")
-local routesTable = json.decode(routesContent)
-
-template.render("pages/main.html", {routes = routesTable})
+ngx.log(ngx.DEBUG, "Fetching latest packages...")
+local pipe = io.popen("curl -q http://vulcano.shadowmods.net/v1/fetch")
+if (pipe) then
+    local r = pipe:read("a*")
+    if (r and r ~= "") then
+        LatestPackages = json.decode(r)
+        ngx.log(ngx.DEBUG, "Success.")
+    end
+    pipe:close()
+end
