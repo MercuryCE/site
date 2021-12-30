@@ -14,7 +14,7 @@
           {{package.label}}
           <span class="uk-label">{{package.category or ""}}</span>
         </h3>
-        <p class="uk-text-meta uk-margin-remove-top">{{package.version}}</p>
+        <p class="uk-text-meta uk-margin-remove-top">{{package.version}} - {{package.author}}</p>
       </div>
     </div>
   </a>
@@ -33,6 +33,8 @@
           >mercury install {{package.label}}</span
         >
       </div>
+      <p>Or download this package manually:</p>
+      <a href="{{package.mirrors[1]}}">{{package.mirrors[1]}}</a>
     </div>
   </div>
 </li>
